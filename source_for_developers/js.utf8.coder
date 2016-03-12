@@ -552,6 +552,29 @@ Words:
 ;--Function Properties of the JSON Object--
 1	0	0	0	parse
 1	0	0	0	stringify
+;--Properties of the Promise Constructor
+1	0	0	0	all
+1	0	0	0	prototype
+1	0	0	0	race
+1	0	0	0	reject
+1	0	0	0	resolve
+;--Properties of the Promise Prototype Object
+1	0	0	0	catch
+1	0	0	0	constructor
+1	0	0	0	then
+1	0	0	0	prototype
+;--UI Events
+;--methods
+1	0	${OP}	0	addEventListener
+1	0	${OP}	0	createEvent
+1	0	${OP}	0	dispatchEvent
+1	0	${OP}	0	handleEvent
+1	0	${OP}	0	initCustomEvent
+1	0	${OP}	0	initEvent
+1	0	${OP}	0	preventDefault
+1	0	${OP}	0	removeEventListener
+1	0	${OP}	0	stopImmediatePropagation
+1	0	${OP}	0	stopPropagation
 
 
 ;----------------------------------------------;
