@@ -191,18 +191,18 @@ Words:
 1	0	${IF}	0	while
 1	0	${IF}	0	with
 ;--Functions and Classes--
-1	0	0	0	class
-1	0	0	0	constructor
-1	0	0	0	extends
+1	0	${OP}	0	class
+1	0	${OP}	0	constructor
+1	0	${OP}	0	extends
 1	0	${OP}	0	function
 1	0	${OP}	0	get
 1	0	${OP}	0	set
-1	0	0	0	static
+1	0	${OP}	0	static
 ;--Modules--
-1	0	0	0	as
-1	0	0	0	export
-1	0	0	0	from
-1	0	0	0	import
+1	0	${OP}	0	as
+1	0	${OP}	0	export
+1	0	${OP}	0	from
+1	0	${OP}	0	import
 ;--Value Properties of the Global Object--
 1	0	0	0	Infinity
 1	0	0	0	NaN
@@ -513,7 +513,7 @@ Words:
 ;--Properties of RegExp Instances--
 1	0	0	0	lastIndex
 ;--Properties of the Array Constructor--
-1	0	0	0	from
+1	0	${OP}	0	from
 1	0	0	0	isArray
 1	0	0	0	of
 1	0	0	0	prototype
@@ -575,6 +575,18 @@ Words:
 1	0	${OP}	0	removeEventListener
 1	0	${OP}	0	stopImmediatePropagation
 1	0	${OP}	0	stopPropagation
+;--DOM
+;--methods
+1	0	${OP}	0	appendChild
+1	0	${OP}	0	hasChildNodes
+1	0	${OP}	0	insertBefore
+1	0	${OP}	0	isEqualNode
+1	0	${OP}	0	removeChild
+1	0	${OP}	0	replaceChild
+1	0	${OP}	0	cloneNode
+
+
+
 
 
 ;----------------------------------------------;
