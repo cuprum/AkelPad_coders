@@ -1,0 +1,1609 @@
+;----------------------------------------------;
+;           Coder plugin syntax file           ;
+;----------------------------------------------;
+
+;Colors
+; Color need to be in #RRGGBB or #RGB format.
+; If color equal to zero, then color ignored.
+;
+;Font styles
+; 0  ignored.
+; 1  normal.
+; 2  bold.
+; 3  italic.
+; 4  bold italic.
+;
+;For comfort file viewing/editing set tab size to 8.
+
+
+Files:
+;==========
+;File types
+;==========
+*.css
+*.less
+
+
+;----------------------------------------------;
+;                  HighLight                   ;
+;----------------------------------------------;
+
+;Flags (sum of the members)
+;     1  case sensitive.
+;     2  word is a composition of characters ("Words:" section only). Example: "0123456789" - highlight words that contain only digits.
+;     4  quote end required ("Quotes:" section only).
+;     8  quote start string is ignored and last meet delimiter used as quote start ("Quotes:" section only).
+;    16  quote end string is ignored and first meet delimiter used as quote end ("Quotes:" section only).
+;    32  don't highlight quote start ("Quotes:" section only).
+;    64  don't highlight quote end ("Quotes:" section only).
+;   128  don't catch and don't highlight quote start ("Quotes:" section only).
+;   256  don't catch and don't highlight quote end ("Quotes:" section only).
+;   512  quote start, delimiter or word located at line start.
+;  1024  quote end, delimiter or word located at line end.
+;  2048  quote start is surrounded with delimiters ("Quotes:" section only).
+;  4096  quote end is surrounded with delimiters ("Quotes:" section only).
+;  8192  quote doesn't contain delimiters ("Quotes:" section only).
+; 16384  only quote start string is catched ("Quotes:" section only).
+; 32768  quote doesn't contain any character ("Quotes:" section only).
+
+
+Font:
+;=================================================================
+;FontStyle             FontSize              FaceName
+;=================================================================
+${HighLight_FontStyle} ${HighLight_FontSize} ${HighLight_FaceName}
+
+
+Colors:
+;=============================================================================================================================================================================================================================================================================================================================================================================================================================
+;BasicTextColor             BasicBkColor              SelTextColor              SelBkColor              LineTextColor              LineBkColor              LineBorderColor              AltTextColor              AltBkColor              AltBorderColor              ColumnColor              MarkerColor              CaretColor              UrlColor              ActiveUrlColor              VisitUrlColor
+;=============================================================================================================================================================================================================================================================================================================================================================================================================================
+${HighLight_BasicTextColor} ${HighLight_BasicBkColor} ${HighLight_SelTextColor} ${HighLight_SelBkColor} ${HighLight_LineTextColor} ${HighLight_LineBkColor} ${HighLight_LineBorderColor} ${HighLight_AltTextColor} ${HighLight_AltBkColor} ${HighLight_AltBorderColor} ${HighLight_ColumnColor} ${HighLight_MarkerColor} ${HighLight_CaretColor} ${HighLight_UrlColor} ${HighLight_ActiveUrlColor} ${HighLight_VisitUrlColor}
+
+
+BkImage:
+;==================================================
+;BkImageFile              BkImageAlpha
+;==================================================
+${HighLight_BkImageFile}  ${HighLight_BkImageAlpha}
+
+
+AutoMark:
+;====================================================================================================================
+;AutoMarkFlags             AutoMarkFontStyle              AutoMarkTextColor              AutoMarkBkColor
+;====================================================================================================================
+${HighLight_AutoMarkFlags} ${HighLight_AutoMarkFontStyle} ${HighLight_AutoMarkTextColor} ${HighLight_AutoMarkBkColor}
+
+
+Quotes:
+;======================================================================================
+;Flags  Pattern  "\BackRef=(FontStyle,ColorText,ColorBk) \BackRef=..."  ParentID RuleID
+;======================================================================================
+;For work // in nested levels: catch spaces on line start to avoid rule 8 catch it
+0	"^\s++"  "\0=(0,0,0)"                                           0        0
+;===================================================================================
+;Flags  Font    Color   Color   Quote   Quote   Escape  Quote   Quote   Parent  Rule
+;       style   text    bkgrnd  start   end     char    include exclude ID      ID
+;===================================================================================
+;1=1 *.less files
+1	0	${COMM}	0	"//"	""	":"	""	""	0	0
+;389=1+4+128+256
+389	0	0	0	"["	"]"	""	""	""	0	2
+;385=1+128+256
+385	0	${STR}	0	"="	""	""	""	""	2	0
+;257=1+256
+257	0	${ATTR}	0	""	"="	""	""	""	2	0
+;389=1+4+128+256
+389	0	0	0	"("	")"	""	""	""	0	5
+;385=1+128+256
+385	0	0	0	":"	","	""	""	""	5	7
+;261=1+4+256
+261	0	0	0	""	":"	""	""	""	5	6
+;5=1+4
+5	0	${STR}	0	`"`	`"`	"\"	""	""	-3	0
+;5=1+4
+5	0	${STR}	0	"'"	"'"	"\"	""	""	-3	0
+;261=1+4+256
+261	0	0	0	""	";"	""	""	""	1	8
+;385=1+128+256
+385	0	0	0	":"	";"	""	""	""	8	4
+;261=1+4+256
+261	0	0	0	""	":"	""	""	""	8	3
+
+
+QuotesRE:
+;==================================================================================================================================
+;Flags  Pattern                                              "\BackRef=(FontStyle,ColorText,ColorBk) \BackRef=..."  ParentID RuleID
+;==================================================================================================================================
+0	"(#)([A-F\d]{6}|[A-F\d]{3})\b"                           "\1=(0,0,\2)"                                      -3       0
+0	"#[_a-z\d\-]++"                                          "\0=(0,${STR},0)"                                  -3       0
+0	"@[_a-z\d\-]++"                                          "\0=(0,${TYPE},0)"                                 -3       0
+0	"([_a-z\d\-]++)?(\.[_a-z\d\-]++)?(:[:]?[_a-z\d\-]++)*"   "\1=(0,${OP},0) \2=(0,${VAR},0) \3=(0,${AREA},0)"  0        0
+
+
+Delimiters:
+;===============================================
+;Flags  Font    Color   Color   Char(s)   Parent
+;       style   text    bkgrnd            ID
+;===============================================
+1	0	0	0	" "
+1	0	0	0	"	"
+1	0	${DEL1}	0	{
+1	0	${DEL1}	0	}
+1	0	${DEL1}	0	(
+1	0	${DEL1}	0	)
+1	0	${DEL2}	0	,
+1	0	${DEL2}	0	;
+1	0	${DEL2}	0	.
+1	0	${DEL2}	0	:
+1	0	${DEL2}	0	+
+1	0	${DEL2}	0	*
+1	0	${DEL2}	0	>
+1	0	${DEL2}	0	[
+1	0	${DEL2}	0	]
+1	0	${DEL2}	0	=
+1	0	${DEL2}	0	|
+1	0	${DEL2}	0	~
+1	0	${DEL2}	0	#
+
+
+Words:
+;================================================================
+;Flags  Font    Color   Color   Word                       Parent
+;       style   text    bkgrnd                             ID
+;================================================================
+;Properties
+0	0	${OP}	0	align-content              3
+0	0	${OP}	0	align-items                3
+0	0	${OP}	0	align-self                 3
+0	0	${OP}	0	animation                  3
+0	0	${OP}	0	animation-delay            3
+0	0	${OP}	0	animation-direction        3
+0	0	${OP}	0	animation-duration         3
+0	0	${OP}	0	animation-fill-mode        3
+0	0	${OP}	0	animation-iteration-count  3
+0	0	${OP}	0	animation-name             3
+0	0	${OP}	0	animation-play-state       3
+0	0	${OP}	0	animation-timing-function  3
+0	0	${OP}	0	azimuth                    3
+0	0	${OP}	0	backface-visibility        3
+0	0	${OP}	0	background                 3
+0	0	${OP}	0	background-attachment      3
+0	0	${OP}	0	background-clip            3
+0	0	${OP}	0	background-color           3
+0	0	${OP}	0	background-image           3
+0	0	${OP}	0	background-origin          3
+0	0	${OP}	0	background-position        3
+0	0	${OP}	0	background-position-x      3
+0	0	${OP}	0	background-position-y      3
+0	0	${OP}	0	background-repeat          3
+0	0	${OP}	0	background-size            3
+0	0	${OP}	0	border                     3
+0	0	${OP}	0	border-bottom              3
+0	0	${OP}	0	border-bottom-color        3
+0	0	${OP}	0	border-bottom-left-radius  3
+0	0	${OP}	0	border-bottom-right-radius 3
+0	0	${OP}	0	border-bottom-style        3
+0	0	${OP}	0	border-bottom-width        3
+0	0	${OP}	0	border-collapse            3
+0	0	${OP}	0	border-color               3
+0	0	${OP}	0	border-image               3
+0	0	${OP}	0	border-image-outset        3
+0	0	${OP}	0	border-image-repeat        3
+0	0	${OP}	0	border-image-slice         3
+0	0	${OP}	0	border-image-source        3
+0	0	${OP}	0	border-image-width         3
+0	0	${OP}	0	border-left                3
+0	0	${OP}	0	border-left-color          3
+0	0	${OP}	0	border-left-style          3
+0	0	${OP}	0	border-left-width          3
+0	0	${OP}	0	border-radius              3
+0	0	${OP}	0	border-right               3
+0	0	${OP}	0	border-right-color         3
+0	0	${OP}	0	border-right-style         3
+0	0	${OP}	0	border-right-width         3
+0	0	${OP}	0	border-spacing             3
+0	0	${OP}	0	border-style               3
+0	0	${OP}	0	border-top                 3
+0	0	${OP}	0	border-top-color           3
+0	0	${OP}	0	border-top-left-radius     3
+0	0	${OP}	0	border-top-right-radius    3
+0	0	${OP}	0	border-top-style           3
+0	0	${OP}	0	border-top-width           3
+0	0	${OP}	0	border-width               3
+0	0	${OP}	0	bottom                     3
+0	0	${OP}	0	box-shadow                 3
+0	0	${OP}	0	box-sizing                 3
+0	0	${OP}	0	caption-side               3
+0	0	${OP}	0	clear                      3
+0	0	${OP}	0	clip                       3
+0	0	${OP}	0	color                      3
+0	0	${OP}	0	column-count               3
+0	0	${OP}	0	column-fill                3
+0	0	${OP}	0	column-gap                 3
+0	0	${OP}	0	column-rule                3
+0	0	${OP}	0	column-rule-color          3
+0	0	${OP}	0	column-rule-style          3
+0	0	${OP}	0	column-rule-width          3
+0	0	${OP}	0	column-span                3
+0	0	${OP}	0	column-width               3
+0	0	${OP}	0	columns                    3
+0	0	${OP}	0	content                    3
+0	0	${OP}	0	counter-increment          3
+0	0	${OP}	0	counter-reset              3
+0	0	${OP}	0	cue                        3
+0	0	${OP}	0	cue-after                  3
+0	0	${OP}	0	cue-before                 3
+0	0	${OP}	0	cursor                     3
+0	0	${OP}	0	direction                  3
+0	0	${OP}	0	display                    3
+0	0	${OP}	0	elevation                  3
+0	0	${OP}	0	empty-cells                3
+0	0	${OP}	0	filter                     3
+0	0	${OP}	0	flex                       3
+0	0	${OP}	0	flex-basis                 3
+0	0	${OP}	0	flex-direction             3
+0	0	${OP}	0	flex-flow                  3
+0	0	${OP}	0	flex-grow                  3
+0	0	${OP}	0	flex-shrink                3
+0	0	${OP}	0	flex-wrap                  3
+0	0	${OP}	0	float                      3
+0	0	${OP}	0	font                       3
+0	0	${OP}	0	font-family                3
+0	0	${OP}	0	font-size                  3
+0	0	${OP}	0	font-size-adjust           3
+0	0	${OP}	0	font-stretch               3
+0	0	${OP}	0	font-style                 3
+0	0	${OP}	0	font-variant               3
+0	0	${OP}	0	font-weight                3
+0	0	${OP}	0	hanging-punctuation        3
+0	0	${OP}	0	height                     3
+0	0	${OP}	0	ime-mode                   3
+0	0	${OP}	0	justify-content            3
+0	0	${OP}	0	left                       3
+0	0	${OP}	0	letter-spacing             3
+0	0	${OP}	0	line-break                 3
+0	0	${OP}	0	line-height                3
+0	0	${OP}	0	list-style                 3
+0	0	${OP}	0	list-style-image           3
+0	0	${OP}	0	list-style-position        3
+0	0	${OP}	0	list-style-type            3
+0	0	${OP}	0	margin                     3
+0	0	${OP}	0	margin-bottom              3
+0	0	${OP}	0	margin-left                3
+0	0	${OP}	0	margin-right               3
+0	0	${OP}	0	margin-top                 3
+0	0	${OP}	0	marker-offset              3
+0	0	${OP}	0	marks                      3
+0	0	${OP}	0	max-height                 3
+0	0	${OP}	0	max-width                  3
+0	0	${OP}	0	min-height                 3
+0	0	${OP}	0	min-width                  3
+0	0	${OP}	0	nav-down                   3
+0	0	${OP}	0	nav-index                  3
+0	0	${OP}	0	nav-left                   3
+0	0	${OP}	0	nav-right                  3
+0	0	${OP}	0	nav-up                     3
+0	0	${OP}	0	opacity                    3
+0	0	${OP}	0	order                      3
+0	0	${OP}	0	orient                     3
+0	0	${OP}	0	orphans                    3
+0	0	${OP}	0	outline                    3
+0	0	${OP}	0	outline-color              3
+0	0	${OP}	0	outline-offset             3
+0	0	${OP}	0	outline-style              3
+0	0	${OP}	0	outline-width              3
+0	0	${OP}	0	overflow                   3
+0	0	${OP}	0	overflow-x                 3
+0	0	${OP}	0	overflow-y                 3
+0	0	${OP}	0	padding                    3
+0	0	${OP}	0	padding-bottom             3
+0	0	${OP}	0	padding-left               3
+0	0	${OP}	0	padding-right              3
+0	0	${OP}	0	padding-top                3
+0	0	${OP}	0	page                       3
+0	0	${OP}	0	page-break-after           3
+0	0	${OP}	0	page-break-before          3
+0	0	${OP}	0	page-break-inside          3
+0	0	${OP}	0	pause                      3
+0	0	${OP}	0	pause-after                3
+0	0	${OP}	0	pause-before               3
+0	0	${OP}	0	perspective                3
+0	0	${OP}	0	perspective-origin         3
+0	0	${OP}	0	pitch                      3
+0	0	${OP}	0	pitch-range                3
+0	0	${OP}	0	play-during                3
+0	0	${OP}	0	position                   3
+0	0	${OP}	0	quotes                     3
+0	0	${OP}	0	resize                     3
+0	0	${OP}	0	richness                   3
+0	0	${OP}	0	right                      3
+0	0	${OP}	0	ruby-align                 3
+0	0	${OP}	0	ruby-overhang              3
+0	0	${OP}	0	ruby-position              3
+0	0	${OP}	0	size                       3
+0	0	${OP}	0	speak                      3
+0	0	${OP}	0	speak-header               3
+0	0	${OP}	0	speak-numeral              3
+0	0	${OP}	0	speak-punctuation          3
+0	0	${OP}	0	speech-rate                3
+0	0	${OP}	0	stress                     3
+0	0	${OP}	0	tab-size                   3
+0	0	${OP}	0	table-layout               3
+0	0	${OP}	0	text-align                 3
+0	0	${OP}	0	text-align-last            3
+0	0	${OP}	0	text-decoration            3
+0	0	${OP}	0	text-decoration-color      3
+0	0	${OP}	0	text-decoration-line       3
+0	0	${OP}	0	text-decoration-style      3
+0	0	${OP}	0	text-indent                3
+0	0	${OP}	0	text-justify               3
+0	0	${OP}	0	text-overflow              3
+0	0	${OP}	0	text-shadow                3
+0	0	${OP}	0	text-transform             3
+0	0	${OP}	0	text-underline-position    3
+0	0	${OP}	0	top                        3
+0	0	${OP}	0	transform                  3
+0	0	${OP}	0	transform-origin           3
+0	0	${OP}	0	transform-style            3
+0	0	${OP}	0	transition                 3
+0	0	${OP}	0	transition-delay           3
+0	0	${OP}	0	transition-duration        3
+0	0	${OP}	0	transition-property        3
+0	0	${OP}	0	transition-timing-function 3
+0	0	${OP}	0	unicode-bidi               3
+0	0	${OP}	0	vertical-align             3
+0	0	${OP}	0	visibility                 3
+0	0	${OP}	0	voice-family               3
+0	0	${OP}	0	volume                     3
+0	0	${OP}	0	white-space                3
+0	0	${OP}	0	widows                     3
+0	0	${OP}	0	width                      3
+0	0	${OP}	0	word-break                 3
+0	0	${OP}	0	word-spacing               3
+0	0	${OP}	0	word-wrap                  3
+0	0	${OP}	0	writing-mode               3
+0	0	${OP}	0	z-index                    3
+0	0	${OP}	0	zoom                       3
+;;Pseudo classes
+;0	0	${TAG}	0	active                     1
+;0	0	${TAG}	0	after                      1
+;0	0	${TAG}	0	before                     1
+;0	0	${TAG}	0	checked                    1
+;0	0	${TAG}	0	default                    1
+;0	0	${TAG}	0	disabled                   1
+;0	0	${TAG}	0	empty                      1
+;0	0	${TAG}	0	enabled                    1
+;0	0	${TAG}	0	first-child                1
+;0	0	${TAG}	0	first-letter               1
+;0	0	${TAG}	0	first-line                 1
+;0	0	${TAG}	0	first-of-type              1
+;0	0	${TAG}	0	focus                      1
+;0	0	${TAG}	0	hover                      1
+;0	0	${TAG}	0	indeterminate              1
+;0	0	${TAG}	0	invalid                    1
+;0	0	${TAG}	0	lang                       1
+;0	0	${TAG}	0	last-child                 1
+;0	0	${TAG}	0	last-of-type               1
+;0	0	${TAG}	0	link                       1
+;0	0	${TAG}	0	not                        1
+;0	0	${TAG}	0	nth-child                  1
+;0	0	${TAG}	0	nth-last-child             1
+;0	0	${TAG}	0	nth-last-of-type           1
+;0	0	${TAG}	0	nth-of-type                1
+;0	0	${TAG}	0	only-child                 1
+;0	0	${TAG}	0	only-of-type               1
+;0	0	${TAG}	0	optional                   1
+;0	0	${TAG}	0	read-only                  1
+;0	0	${TAG}	0	read-write                 1
+;0	0	${TAG}	0	required                   1
+;0	0	${TAG}	0	root                       1
+;0	0	${TAG}	0	target                     1
+;0	0	${TAG}	0	valid                      1
+;0	0	${TAG}	0	visited                    1
+;;Pseudo elements
+;0	0	${TYPE}	0	after                      1
+;0	0	${TYPE}	0	before                     1
+;0	0	${TYPE}	0	first-letter               1
+;0	0	${TYPE}	0	first-line                 1
+;0	0	${TYPE}	0	selection                  1
+;;@-rules
+;0	0	${TYPE}	0	@charset                   0
+;0	0	${TYPE}	0	@import                    0
+;0	0	${TYPE}	0	@font-face                 0
+;0	0	${TYPE}	0	@media                     0
+;0	0	${TYPE}	0	@page                      0
+;0	0	${TYPE}	0	@keyframes                 0
+;;@-rules values
+;0	0	${ATTR}	0	all                        2
+;0	0	${ATTR}	0	braille                    2
+;0	0	${ATTR}	0	embossed                   2
+;0	0	${ATTR}	0	handheld                   2
+;0	0	${ATTR}	0	print                      2
+;0	0	${ATTR}	0	projection                 2
+;0	0	${ATTR}	0	screen                     2
+;0	0	${ATTR}	0	speech                     2
+;0	0	${ATTR}	0	tty                        2
+;0	0	${ATTR}	0	tv                         2
+;Property values
+0	0	${ATTR}	0	!important                 4
+0	0	${ATTR}	0	%                          4
+0	0	${ATTR}	0	absolute                   4
+0	0	${ATTR}	0	alias                      4
+0	0	${ATTR}	0	all-scroll                 4
+0	0	${ATTR}	0	always                     4
+0	0	${ATTR}	0	armenian                   4
+0	0	${ATTR}	0	attr                       4
+0	0	${ATTR}	0	auto                       4
+0	0	${ATTR}	0	avoid                      4
+0	0	${ATTR}	0	baseline                   4
+0	0	${ATTR}	0	bidi-override              4
+0	0	${ATTR}	0	blink                      4
+0	0	${ATTR}	0	block                      4
+0	0	${ATTR}	0	bold                       4
+0	0	${ATTR}	0	bolder                     4
+0	0	${ATTR}	0	border-box                 4
+0	0	${ATTR}	0	both                       4
+0	0	${ATTR}	0	bottom                     4
+0	0	${ATTR}	0	break-word                 4
+0	0	${ATTR}	0	bt-lr                      4
+0	0	${ATTR}	0	bt-rl                      4
+0	0	${ATTR}	0	capitalize                 4
+0	0	${ATTR}	0	cell                       4
+0	0	${ATTR}	0	center                     4
+0	0	${ATTR}	0	ch                         4
+0	0	${ATTR}	0	circle                     4
+0	0	${ATTR}	0	clip                       4
+0	0	${ATTR}	0	close-quote                4
+0	0	${ATTR}	0	cm                         4
+0	0	${ATTR}	0	col-resize                 4
+0	0	${ATTR}	0	collapse                   4
+0	0	${ATTR}	0	contain                    4
+0	0	${ATTR}	0	content-box                4
+0	0	${ATTR}	0	context-menu               4
+0	0	${ATTR}	0	copy                       4
+0	0	${ATTR}	0	counter                    4
+0	0	${ATTR}	0	cover                      4
+0	0	${ATTR}	0	crosshair                  4
+0	0	${ATTR}	0	cursive                    4
+0	0	${ATTR}	0	dashed                     4
+0	0	${ATTR}	0	decimal                    4
+0	0	${ATTR}	0	decimal-leading-zero       4
+0	0	${ATTR}	0	default                    4
+0	0	${ATTR}	0	disc                       4
+0	0	${ATTR}	0	dotted                     4
+0	0	${ATTR}	0	double                     4
+0	0	${ATTR}	0	e-resize                   4
+0	0	${ATTR}	0	ellipsis                   4
+0	0	${ATTR}	0	em                         4
+0	0	${ATTR}	0	embed                      4
+0	0	${ATTR}	0	end                        4
+0	0	${ATTR}	0	ew-resize                  4
+0	0	${ATTR}	0	ex                         4
+0	0	${ATTR}	0	fantasy                    4
+0	0	${ATTR}	0	fixed                      4
+0	0	${ATTR}	0	georgian                   4
+0	0	${ATTR}	0	grab                       4
+0	0	${ATTR}	0	grabbing                   4
+0	0	${ATTR}	0	groove                     4
+0	0	${ATTR}	0	help                       4
+0	0	${ATTR}	0	hidden                     4
+0	0	${ATTR}	0	hide                       4
+0	0	${ATTR}	0	horizontal                 4
+0	0	${ATTR}	0	hsl                        4
+0	0	${ATTR}	0	hsla                       4
+0	0	${ATTR}	0	in                         4
+0	0	${ATTR}	0	inherit                    4
+0	0	${ATTR}	0	initial                    4
+0	0	${ATTR}	0	inline                     4
+0	0	${ATTR}	0	inline-block               4
+0	0	${ATTR}	0	inline-table               4
+0	0	${ATTR}	0	inset                      4
+0	0	${ATTR}	0	inside                     4
+0	0	${ATTR}	0	invert                     4
+0	0	${ATTR}	0	italic                     4
+0	0	${ATTR}	0	justify                    4
+0	0	${ATTR}	0	large                      4
+0	0	${ATTR}	0	larger                     4
+0	0	${ATTR}	0	left                       4
+0	0	${ATTR}	0	lighter                    4
+0	0	${ATTR}	0	line-through               4
+0	0	${ATTR}	0	list-item                  4
+0	0	${ATTR}	0	lower-alpha                4
+0	0	${ATTR}	0	lower-greek                4
+0	0	${ATTR}	0	lower-latin                4
+0	0	${ATTR}	0	lower-roman                4
+0	0	${ATTR}	0	lowercase                  4
+0	0	${ATTR}	0	lr-tb                      4
+0	0	${ATTR}	0	ltr                        4
+0	0	${ATTR}	0	medium                     4
+0	0	${ATTR}	0	middle                     4
+0	0	${ATTR}	0	mm                         4
+0	0	${ATTR}	0	monospace                  4
+0	0	${ATTR}	0	move                       4
+0	0	${ATTR}	0	n-resize                   4
+0	0	${ATTR}	0	ne-resize                  4
+0	0	${ATTR}	0	nesw-resize                4
+0	0	${ATTR}	0	no-close-quote             4
+0	0	${ATTR}	0	no-drop                    4
+0	0	${ATTR}	0	no-open-quote              4
+0	0	${ATTR}	0	no-repeat                  4
+0	0	${ATTR}	0	none                       4
+0	0	${ATTR}	0	normal                     4
+0	0	${ATTR}	0	not-allowed                4
+0	0	${ATTR}	0	nowrap                     4
+0	0	${ATTR}	0	ns-resize                  4
+0	0	${ATTR}	0	nw-resize                  4
+0	0	${ATTR}	0	nwse-resize                4
+0	0	${ATTR}	0	oblique                    4
+0	0	${ATTR}	0	open-quote                 4
+0	0	${ATTR}	0	outset                     4
+0	0	${ATTR}	0	outside                    4
+0	0	${ATTR}	0	overline                   4
+0	0	${ATTR}	0	padding-box                4
+0	0	${ATTR}	0	pc                         4
+0	0	${ATTR}	0	pointer                    4
+0	0	${ATTR}	0	pre                        4
+0	0	${ATTR}	0	pre-line                   4
+0	0	${ATTR}	0	pre-wrap                   4
+0	0	${ATTR}	0	progress                   4
+0	0	${ATTR}	0	pt                         4
+0	0	${ATTR}	0	px                         4
+0	0	${ATTR}	0	rect                       4
+0	0	${ATTR}	0	relative                   4
+0	0	${ATTR}	0	rem                        4
+0	0	${ATTR}	0	repeat                     4
+0	0	${ATTR}	0	repeat-x                   4
+0	0	${ATTR}	0	repeat-y                   4
+0	0	${ATTR}	0	rgb                        4
+0	0	${ATTR}	0	rgba                       4
+0	0	${ATTR}	0	ridge                      4
+0	0	${ATTR}	0	right                      4
+0	0	${ATTR}	0	rl-tb                      4
+0	0	${ATTR}	0	row-resize                 4
+0	0	${ATTR}	0	rtl                        4
+0	0	${ATTR}	0	run-in                     4
+0	0	${ATTR}	0	s-resize                   4
+0	0	${ATTR}	0	sans-serif                 4
+0	0	${ATTR}	0	scroll                     4
+0	0	${ATTR}	0	se-resize                  4
+0	0	${ATTR}	0	separate                   4
+0	0	${ATTR}	0	serif                      4
+0	0	${ATTR}	0	show                       4
+0	0	${ATTR}	0	small                      4
+0	0	${ATTR}	0	small-caps                 4
+0	0	${ATTR}	0	smaller                    4
+0	0	${ATTR}	0	solid                      4
+0	0	${ATTR}	0	square                     4
+0	0	${ATTR}	0	start                      4
+0	0	${ATTR}	0	static                     4
+0	0	${ATTR}	0	sub                        4
+0	0	${ATTR}	0	super                      4
+0	0	${ATTR}	0	sw-resize                  4
+0	0	${ATTR}	0	table                      4
+0	0	${ATTR}	0	table-caption              4
+0	0	${ATTR}	0	table-cell                 4
+0	0	${ATTR}	0	table-column               4
+0	0	${ATTR}	0	table-column-group         4
+0	0	${ATTR}	0	table-footer-group         4
+0	0	${ATTR}	0	table-header-group         4
+0	0	${ATTR}	0	table-row                  4
+0	0	${ATTR}	0	table-row-group            4
+0	0	${ATTR}	0	tb-lr                      4
+0	0	${ATTR}	0	tb-rl                      4
+0	0	${ATTR}	0	text                       4
+0	0	${ATTR}	0	text-bottom                4
+0	0	${ATTR}	0	text-top                   4
+0	0	${ATTR}	0	thick                      4
+0	0	${ATTR}	0	thin                       4
+0	0	${ATTR}	0	top                        4
+0	0	${ATTR}	0	transparent                4
+0	0	${ATTR}	0	underline                  4
+0	0	${ATTR}	0	upper-alpha                4
+0	0	${ATTR}	0	upper-latin                4
+0	0	${ATTR}	0	upper-roman                4
+0	0	${ATTR}	0	uppercase                  4
+0	0	${ATTR}	0	url                        4
+0	0	${ATTR}	0	vertical                   4
+0	0	${ATTR}	0	vertical-text              4
+0	0	${ATTR}	0	vh                         4
+0	0	${ATTR}	0	visible                    4
+0	0	${ATTR}	0	vmax                       4
+0	0	${ATTR}	0	vmin                       4
+0	0	${ATTR}	0	vw                         4
+0	0	${ATTR}	0	w-resize                   4
+0	0	${ATTR}	0	wait                       4
+0	0	${ATTR}	0	x-large                    4
+0	0	${ATTR}	0	x-small                    4
+0	0	${ATTR}	0	xx-large                   4
+0	0	${ATTR}	0	xx-small                   4
+0	0	${ATTR}	0	zoom-in                    4
+0	0	${ATTR}	0	zoom-out                   4
+;Features
+0	0	${OP}	0	aspect-ratio               6
+0	0	${OP}	0	color                      6
+0	0	${OP}	0	color-index                6
+0	0	${OP}	0	device-aspect-ratio        6
+0	0	${OP}	0	device-height              6
+0	0	${OP}	0	device-width               6
+0	0	${OP}	0	grid                       6
+0	0	${OP}	0	height                     6
+0	0	${OP}	0	max-aspect-ratio           6
+0	0	${OP}	0	max-color                  6
+0	0	${OP}	0	max-color-index            6
+0	0	${OP}	0	max-device-aspect-ratio    6
+0	0	${OP}	0	max-device-height          6
+0	0	${OP}	0	max-device-width           6
+0	0	${OP}	0	max-height                 6
+0	0	${OP}	0	max-monochrome             6
+0	0	${OP}	0	max-resolution             6
+0	0	${OP}	0	max-width                  6
+0	0	${OP}	0	min-aspect-ratio           6
+0	0	${OP}	0	min-color                  6
+0	0	${OP}	0	min-color-index            6
+0	0	${OP}	0	min-device-aspect-ratio    6
+0	0	${OP}	0	min-device-width           6
+0	0	${OP}	0	min-device-height          6
+0	0	${OP}	0	min-height                 6
+0	0	${OP}	0	min-monochrome             6
+0	0	${OP}	0	min-resolution             6
+0	0	${OP}	0	min-width                  6
+0	0	${OP}	0	monochrome                 6
+0	0	${OP}	0	orientation                6
+0	0	${OP}	0	overflow-block             6
+0	0	${OP}	0	overflow-inline            6
+0	0	${OP}	0	resolution                 6
+0	0	${OP}	0	scan                       6
+0	0	${OP}	0	update-frequency           6
+0	0	${OP}	0	width                      6
+
+
+;----------------------------------------------;
+;                   CodeFold                   ;
+;----------------------------------------------;
+
+;Flags (sum of the members)
+;       1  case sensitive.
+;       2  force get fold name for function list from left at the fold start ("Folds:" section only).
+;       4  force get fold name for function list from right at the fold start, including fold start ("Folds:" section only).
+;       8  fold start ("Folds:" section) or skip start ("Skips:" section) located at line start.
+;      16  fold start ("Folds:" section) or skip start ("Skips:" section) located at line end.
+;      32  fold end ("Folds:" section) or skip end ("Skips:" section) located at line start.
+;      64  fold end ("Folds:" section) or skip end ("Skips:" section) located at line end.
+;     128  don't catch fold end ("Folds:" section) or skip end ("Skips:" section).
+;     256  additional to 128 flag - more priority is given to sibling level instead of parent level ("Folds:" section only).
+;     512  comment fold - fold ignore any other folds and skips inside ("Folds:" section only).
+;    1024  reserved.
+;    2048  deny fold - founded fold will be ignored ("Folds:" section only).
+;    4096  xml fold - "<tag" and "</tag>", "<single" and "/>", "<single" and ">" ("Folds:" section only).
+;    8192  don't check delimiters from left of fold start ("Folds:" section only).
+;   16384  don't check delimiters from right of fold start ("Folds:" section only).
+;   32768  don't check delimiters from left of fold end ("Folds:" section only).
+;   65536  don't check delimiters from right of fold end ("Folds:" section only).
+;  131072  deny delimiters ("Folds:" section only).
+;  262144  don't show fold in list ("Folds:" section only).
+; 1048576  regular expression in fold start ("Folds:" section) or skip start ("Skips:" section).
+; 2097152  regular expression in fold end ("Folds:" section) or skip end ("Skips:" section). Backreference \101 matches \1 in fold start, \102 matches \2 and so on.
+
+
+FoldPanel:
+;=================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+;PanelFirstBkColor            PanelSecondBkColor             PanelNormalFoldColor             PanelActiveFoldColor             PanelNormalNodeOpenBkColor             PanelNormalNodeCloseBkColor             PanelActiveNodeOpenBkColor             PanelActiveNodeCloseBkColor             PanelNormalNodeOpenSignColor             PanelNormalNodeCloseSignColor             PanelActiveNodeOpenSignColor             PanelActiveNodeCloseSignColor
+;=================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+${CodeFold_PanelFirstBkColor} ${CodeFold_PanelSecondBkColor} ${CodeFold_PanelNormalFoldColor} ${CodeFold_PanelActiveFoldColor} ${CodeFold_PanelNormalNodeOpenBkColor} ${CodeFold_PanelNormalNodeCloseBkColor} ${CodeFold_PanelActiveNodeOpenBkColor} ${CodeFold_PanelActiveNodeCloseBkColor} ${CodeFold_PanelNormalNodeOpenSignColor} ${CodeFold_PanelNormalNodeCloseSignColor} ${CodeFold_PanelActiveNodeOpenSignColor} ${CodeFold_PanelActiveNodeCloseSignColor}
+
+
+FoldList:
+;================================================
+;ListTextColor            ListBkColor
+;================================================
+${CodeFold_ListTextColor} ${CodeFold_ListBkColor}
+
+
+TagMark:
+;============================================================================================================
+;TagMarkFlags            TagMarkFontStyle             TagMarkTextColor             TagMarkBkColor
+;============================================================================================================
+${CodeFold_TagMarkFlags} ${CodeFold_TagMarkFontStyle} ${CodeFold_TagMarkTextColor} ${CodeFold_TagMarkBkColor}
+
+
+Skips:
+;=============================
+;Flags  Skip    Skip    Escape
+;       start   end     char
+;=============================
+;9=1+8
+9	"//"	""	""
+
+
+Folds:
+;===========================================================================
+;Flags  Font    Color   Color   Fold    Fold   Deli     Parent  Rule    Rule
+;       style   text    bkgrnd  start   end    miters   ID      ID      file
+;===========================================================================
+1	0	0	0	"{"     "}"    ""       0	1
+;513=1+512
+513	0	${COMM}	0	"/*"    "*/"   ""       0	0
+
+
+;----------------------------------------------;
+;                 AutoComplete                 ;
+;----------------------------------------------;
+
+;Flags (sum of the members)
+;  1  force case sensitive.
+;  2  force case insensitive.
+;  4  regular expression (only for "$="). Scan starts from caret line beginning and metacharacters \a or \z specified caret position.
+;  8  Don't show in listbox.
+
+
+CompleteList:
+;=====================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+;ListFontStyle                ListFontSize                 ListFaceName                 ListLineGap                 ListBlockIcon `"C:\1.dll", 0` ListBlockIconMargins "left;right"    ListHlBaseIcon `"C:\1.dll", 0` ListHlBaseIconMargins "left;right"    ListDocWordIcon `"C:\1.dll", 0` ListDocWordIconMargins "left;right"    ListBasicTextColor                 ListBasicBkColor                 ListSelTextColor                 ListSelBkColor
+;=====================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+${AutoComplete_ListFontStyle} ${AutoComplete_ListFontSize} ${AutoComplete_ListFaceName} ${AutoComplete_ListLineGap} ${AutoComplete_ListBlockIcon} ${AutoComplete_ListBlockIconMargins} ${AutoComplete_ListHlBaseIcon} ${AutoComplete_ListHlBaseIconMargins} ${AutoComplete_ListDocWordIcon} ${AutoComplete_ListDocWordIconMargins} ${AutoComplete_ListBasicTextColor} ${AutoComplete_ListBasicBkColor} ${AutoComplete_ListSelTextColor} ${AutoComplete_ListSelBkColor}
+
+
+Blocks:
+;=============================================================================
+;Abbreviations and blocks
+;
+; $~abbr         normal abbreviation.
+; $(flags)~abbr  normal abbreviation with flags.
+; $=abbr         exact abbreviation. May contain delimiters.
+; $(flags)=abbr  exact abbreviation with flags. May contain delimiters.
+; $[]            set caret to this position. Can be multiple (hot spots).
+; $[text]        select text. Can be multiple (hot spots).
+; $$             symbol $.
+; $\]            escape symbol ]. Can be used in $[text] block: $[One [1$\] ].
+; ${VAR}         variable assigned from Coder::Settings.
+; $;             comment line.
+;=============================================================================
+$;
+$;	Special Rules
+$;      -------------
+$~@i
+@import url($[]);
+
+$~@m
+@media print {
+${AutoComplete_Indent}$[]
+}
+
+$~@f
+@font-face {
+${AutoComplete_Indent}font-family: $[];
+${AutoComplete_Indent}src: url();
+}
+
+$~!
+!important
+
+$;
+$;	Box behavior and properties
+$;      ---------------------------
+$~fl
+float: $[];$[]
+
+$~fll
+float: left;
+
+$~flr
+float: right;
+
+$~fln
+float: none;
+
+$~cl
+clear: $[];$[]
+
+$~cln
+clear: none;
+
+$~cll
+clear: left;
+
+$~clr
+clear: right;
+
+$~clb
+clear: both;
+
+$~d
+display: $[];$[]
+
+$~dn
+display: none;
+
+$~db
+display: block;
+
+$~di
+display: inline;
+
+$~dib
+display: inline-block;
+
+$~df
+display: flex;
+
+$~dif
+display: inline-flex;
+
+$~dli
+display: list-item;
+
+$~dri
+display: run-in;
+
+$~dt
+display: table;
+
+$~dit
+display: inline-table;
+
+$~dtr
+display: table-row;
+
+$~dtc
+display: table-cell;
+
+$~v
+visibility: $[];$[]
+
+$~vv
+visibility: visible;
+
+$~vh
+visibility: hidden;
+
+$~vc
+visibility: collapse;
+
+$~ov
+overflow: $[];$[]
+
+$~ovh
+overflow: hidden;
+
+$~ovs
+overflow: scroll;
+
+$~ovv
+overflow: visible;
+
+$~ova
+overflow: auto;
+
+$~ovx
+overflow-x: $[];$[]
+
+$~ovy
+overflow-y: $[];$[]
+
+$~zoo
+zoom: 1;
+
+$~cp
+clip: $[];
+
+$~cpa
+clip: auto;
+
+$~cpr
+clip:rect(0 0 0 0);
+
+$;
+$;	Borders
+$;-------------
+$~b+
+border: 1px solid #000$[];
+
+$~b
+border: $[];$[]
+
+$~bn
+border: none;
+
+$~bcl
+border-collapse:$[];$[]
+
+$~bc
+border-color: #000;
+
+$~bdsp
+border-spacing: $[];$[]
+
+$~bs
+border-style: $[];$[]
+
+$~bsn
+border-style: none;
+
+$~bss
+border-style: solid;
+
+$~bsdt
+border-style: dotted;
+
+$~bsds
+border-style: dashed;
+
+$~bw
+border-width: $[];$[]
+
+$~bt
+border-top: $[];$[]
+
+$~btn
+border-top: none;
+
+$~bt+
+border-top: $[]1px solid #000;$[]
+
+$~br
+border-right: $[];$[]
+
+$~brn
+border-right: none;
+
+$~br+
+border-right: $[]1px solid #000;$[]
+
+$~bb
+border-bottom: $[];$[]
+
+$~bbn
+border-bottom: none;
+
+$~bb+
+border-bottom: $[]1px solid #000;$[]
+
+$~bl
+border-left: $[];$[]
+
+$~bln
+border-left: none;
+
+$~bl+
+border-left: $[]1px solid #000;$[]
+
+$~brz
+border-radius: $[];$[]
+
+$~brz0
+border-radius: 0;
+
+$~bxz
+box-sizing: $[];$[]
+
+$~bxzbb
+box-sizing: border-box;
+
+$~bxzcb
+box-sizing: content-box;
+
+$~bxsh
+box-shadow: $[];$[]
+
+$~bxshn
+box-shadow: none;
+
+$~bxsh+
+box-shadow: $[]0 0 0 #000;$[]
+
+$;----------
+$;	Sizing
+$;----------
+$~m
+margin: $[];$[]
+
+$~ma
+margin: auto;
+
+$~m0
+margin: 0;
+
+$~m0a
+margin: 0 auto;
+
+$~mt
+margin-top: $[];$[]
+
+$~mt0
+margin-top: 0;
+
+$~mta
+margin-top: auto;
+
+$~mr
+margin-right: $[];$[]
+
+$~mr0
+margin-right: 0;
+
+$~mra
+margin-right: auto;
+
+$~mb
+margin-bottom: $[];$[]
+
+$~mb0
+margin-bottom: 0;
+
+$~mba
+margin-bottom: auto;
+
+$~ml
+margin-left: $[];$[]
+
+$~ml0
+margin-left: 0;
+
+$~mla
+margin-left: auto;
+
+$~p
+padding: $[];$[]
+
+$~p0
+padding: 0;
+
+$~pt
+padding-top: $[];$[]
+
+$~pt0
+padding-top: 0;
+
+$~pr
+padding-right: $[];$[]
+
+$~pr0
+padding-right: 0;
+
+$~pb
+padding-bottom: $[];$[]
+
+$~pb0
+padding-bottom: 0;
+
+$~pl
+padding-left: $[];$[]
+
+$~pl0
+padding-left: 0;
+
+$~w
+width: $[];$[]
+
+$~wa
+width: auto;
+
+$~w100
+width: 100%;
+
+$~w0
+width: 0;
+
+$~w50
+width: 50%;
+
+$~wi
+width: inherit;
+
+$~h
+height: $[];$[]
+
+$~ha
+height: auto;
+
+$~h100
+height: 100%;
+
+$~h0
+height: 0;
+
+$~hi
+height: inherit;
+
+$~maw
+max-width: $[];$[]
+
+$~mawn
+max-width: none;
+
+$~mah
+max-height: $[];$[]
+
+$~mahn
+max-height: none;
+
+$~miw
+min-width: $[];$[]
+
+$~mih
+min-height: $[];$[]
+
+$;
+$;	Positioning
+$;      -----------
+$~pos
+position: $[];$[]
+
+$~posa
+position: absolute;
+
+$~posr
+position: relative;
+
+$~posf
+position: fixed;
+
+$~poss
+position: static;
+
+$~possy
+position: sticky;
+
+$~t
+top: $[];$[]
+
+$~ta
+top: auto;
+
+$~r
+right: $[];
+
+$~ra
+right: auto;
+
+$~bt
+bottom: $[];$[]
+
+$~bta
+bottom: auto;
+
+$~l
+left: $[];$[]
+
+$~la
+left: auto;
+
+$~z
+z-index: $[];$[]
+
+$~za
+z-index: auto;
+
+$;
+$;	Color appearance
+$;      ----------------
+$~o
+outline: $[];$[]
+
+$~on
+outline: none;
+
+$~bg
+background: $[];$[]
+
+$~bgn
+background: none;
+
+$~bg+
+background: $[]#fff url() 0 0 no-repeat;$[]
+
+$~bgc
+background-color: $[]#fff;$[]
+
+$~bgct
+background-color: transparent;
+
+$~bgi
+background-image: url($[]);$[]
+
+$~bgin
+background-image: none;
+
+$~bgr
+background-repeat: $[];$[]
+
+$~bgrr
+background-repeat: repeat;
+
+$~bgrx
+background-repeat: repeat-x;
+
+$~bgry
+background-repeat: repeat-y;
+
+$~bgrn
+background-repeat: no-repeat;
+
+$~bga
+background-attachment: $[];$[]
+
+$~bgaf
+background-attachment: fixed;
+
+$~bgas
+background-attachment: scroll;
+
+$~bgp
+background-position: $[]0 0;$[]
+
+$~bgcp
+background-clip: $[];$[]
+
+$~bgcpbb
+background-clip: border-box;
+
+$~bgcppb
+background-clip: padding-box;
+
+$~bgcpcb
+background-clip: content-box;
+
+$~bgcpnc
+background-clip: no-clip;
+
+$~bgo
+background-origin: $[];$[]
+
+$~bgopb
+background-origin: padding-box;
+
+$~bgobb
+background-origin: border-box;
+
+$~bgocb
+background-origin: content-box;
+
+$~bgz
+background-size: $[];$[]
+
+$~bgza
+background-size: auto;
+
+$~bgzct
+background-size: contain;
+
+$~bgzcv
+background-size: cover;
+
+$~c
+color: $[]#000;$[]
+
+$;
+$;	Special content types
+$;      ---------------------
+$~tbl
+table-layout: $[];$[]
+
+$~tbla
+table-layout: auto;
+
+$~tbl:f
+table-layout: fixed;
+
+$~ec
+empty-cells: $[];$[]
+
+$~ec:s
+empty-cells: show;
+
+$~ec:h
+empty-cells: hide;
+
+$~lis
+list-style: $[];$[]
+
+$~lisn
+list-style: none;
+
+$~list
+list-style-type: $[];$[]
+
+$~listn
+list-style-type: none;
+
+$~listd
+list-style-type: disc;
+
+$~list:c
+list-style-type: circle;
+
+$~lists
+list-style-type: square;
+
+$~list:dc
+list-style-type: decimal;
+
+$~lisi
+list-style-image: $[];$[]
+
+
+$~q
+quotes: $[];$[]
+
+$~qn
+quotes: none;
+
+$~q:ru
+quotes:'\00AB' '\00BB' '\201E' '\201C';
+
+$~q:en
+quotes:'\201C' '\201D' '\2018' '\2019';
+
+$~ct
+content: $[];$[]
+
+$~cta
+content: attr($[]);$[]
+
+$;
+$;	Text
+$;      ----
+$~va
+vertical-align: $[];$[]
+
+$~vasp
+vertical-align: super;
+
+$~vasb
+vertical-align: sub;
+
+$~vat
+vertical-align: top;
+
+$~vatt
+vertical-align: text-top;
+
+$~vam
+vertical-align: middle;
+
+$~vabl
+vertical-align: baseline;
+
+$~vab
+vertical-align: bottom;
+
+$~vatb
+vertical-align: text-bottom;
+
+$~ta
+text-align: $[];$[]
+
+$~tal
+text-align: left;
+
+$~tac
+text-align: center;
+
+$~tar
+text-align: right;
+
+$~taj
+text-align: justify;
+
+$~td
+text-decoration: $[];$[]
+
+$~tdn
+text-decoration: none;
+
+$~tdo
+text-decoration: overline;
+
+$~tdl
+text-decoration: line-through;
+
+$~tdu
+text-decoration: underline;
+
+$~ti
+text-indent: $[];$[]
+
+$~ti-
+text-indent: -9999px;
+
+$~tt
+text-transform: $[];$[]
+
+$~ttn
+text-transform: none;
+
+$~ttu
+text-transform: uppercase;
+
+$~ttc
+text-transform: capitalize;
+
+$~ttl
+text-transform: lowercase;
+
+$~tsh
+text-shadow: $[];$[]
+
+$~tshn
+text-shadow: none;
+
+$~tsh+
+text-shadow: 0 0 0 #000;
+
+$~lh
+line-height: $[];$[]
+
+$~lh0
+line-height: 0;
+
+$~lh1
+line-height: 1;
+
+$~lhn
+line-height: normal;
+
+$~whs
+white-space: $[];$[]
+
+$~whs:n
+white-space: normal;
+
+$~whs:p
+white-space: pre;
+
+$~whs:nw
+white-space: nowrap;
+
+$~whs:pw
+white-space: pre-wrap;
+
+$~whs:pl
+white-space: pre-line;
+
+$~wob
+word-break:$[];$[]
+
+$~wob:n
+word-break: normal;
+
+$~wob:k
+word-break: keep-all;
+
+$~wob:ba
+word-break: break-all;
+
+$~wos
+word-spacing: $[];$[]
+
+$~wow
+word-wrap: $[];$[]
+
+$~wown
+word-wrap: normal;
+
+$~wowno
+word-wrap: none;
+
+$~wow:u
+word-wrap: unrestricted;
+
+$~wow:s
+word-wrap:suppress;
+
+$~lts
+letter-spacing: $[];$[]
+
+$~f
+font: $[];$[]
+
+$~f+
+font: 1em Arial, sans-serif;
+
+$~fw
+font-weight: $[];$[]
+
+$~fwb
+font-weight: bold;
+
+$~fwn
+font-weight: normal;
+
+$~fw300
+font-weight: 300;
+
+$~fs
+font-style: $[];$[]
+
+$~fsi
+font-style: italic;
+
+$~fsn
+font-style: normal;
+
+$~fso
+font-style: oblique;
+
+$~fv
+font-variant: $[];$[]
+
+$~fvn
+font-variant: normal;
+
+$~fvsc
+font-variant: small-caps;
+
+$~fz
+font-size: $[];$[]
+
+$~ff
+font-family: $[];$[]
+
+$~ffs
+font-family: Georgia, 'Times New Roman', serif;
+
+$~ffss
+font-family: Helvetica, Arial, sans-serif;
+
+$~ffc
+font-family: 'Monotype Corsiva', 'Comic Sans MS', cursive;
+
+$~fff
+font-family: Capitals, Impact, fantasy;
+
+$~ffm
+font-family: Monaco, 'Courier New', monospace;
+
+$;----------
+$;	Visual properties
+$;-----------------
+$~op
+opacity: $[];$[]
+
+$~op1
+opacity: 1;
+
+$~op0
+opacity: 0;
+
+$~rz
+resize: $[];$[]
+
+$~rzn
+resize: none;
+
+$~rzb
+resize: both;
+
+$~rzh
+resize: horizontal;
+
+$~rzv
+resize: vertical;
+
+$~cur
+cursor: $[];$[]
+
+$~cura
+cursor: auto;
+
+$~curd
+cursor: default;
+
+$~curc
+cursor: crosshair;
+
+$~curha
+cursor: hand;
+
+$~curhe
+cursor: help;
+
+$~curm
+cursor: move;
+
+$~curp
+cursor: pointer;
+
+$~curt
+cursor: text;
