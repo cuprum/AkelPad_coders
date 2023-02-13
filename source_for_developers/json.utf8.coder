@@ -1,4 +1,4 @@
-﻿;----------------------------------------------;
+;----------------------------------------------;
 ;           Coder plugin syntax file           ;
 ;----------------------------------------------;
 
@@ -79,16 +79,13 @@ Quotes:
 ;======================================================================================
 ;Flags  Pattern  "\BackRef=(FontStyle,ColorText,ColorBk) \BackRef=..."  ParentID RuleID
 ;======================================================================================
+0	`("(?:\\\\|\\"|\\\/|[^"\\\/])+")\s*(?=:)`  "\1=(0,${TAG},0)"             0        0
 ;===================================================================================
 ;Flags  Font    Color   Color   Quote   Quote   Escape  Quote   Quote   Parent  Rule
 ;       style   text    bkgrnd  start   end     char    include exclude ID      ID
 ;===================================================================================
-;13=1+4+8
-13	0	0	0	""	":"	""	""	""	0	1
-;1+4
-5	1	${TYPE}	0	`"`	`"`	""	""	""	1	0
-;1+4
-5	1	${STR}	0	`"`	`"`	""	""	""	0	0
+;5=1+4
+5	0	${STR}	0	`"`	`"`	""	""	""	0	0
 
 
 QuotesRE:
@@ -96,7 +93,7 @@ QuotesRE:
 ;Flags  Pattern                                              "\BackRef=(FontStyle,ColorText,ColorBk) \BackRef=..."  ParentID RuleID
 ;==================================================================================================================================
 ; integers (including negative integers, decimal fractions and E notation)
-0	"(-?(?:\d+)(?:\.\d+)?(?:[eE][+\-]?\d+)?)"	"\1=(0,${NUM},0)"
+0	"(-?\d+(?:\.\d+)?(?:[eE][+\-]?\d+)?)\b"	"\1=(0,${NUM},0)"
 
 
 Delimiters:
@@ -110,8 +107,8 @@ Delimiters:
 1	0	${ATTR}	0	}
 1	0	${ATTR}	0	]
 1	0	${ATTR}	0	[
-1	0	${ATTR}	0	,
-1	0	${ATTR}	0	:
+1	0	0	0	,
+1	0	0	0	:
 
 
 Words:
@@ -119,9 +116,9 @@ Words:
 ;Flags  Font    Color   Color   Word                       Parent
 ;       style   text    bkgrnd                             ID
 ;================================================================
-1	0	${TAG}	0	false
-1	0	${TAG}	0	true
-1	0	${TAG}	0	null
+1	0	${OP}	0	false
+1	0	${OP}	0	true
+1	0	${OP}	0	null
 
 
 ;----------------------------------------------;
@@ -132,10 +129,10 @@ Words:
 ;       1  case sensitive.
 ;       2  force get fold name for function list from left at the fold start ("Folds:" section only).
 ;       4  force get fold name for function list from right at the fold start, including fold start ("Folds:" section only).
-;       8  fold start located at line start ("Folds:" section only).
-;      16  fold start located at line end ("Folds:" section only).
-;      32  fold end located at line start ("Folds:" section only).
-;      64  fold end located at line end ("Folds:" section only).
+;       8  fold start ("Folds:" section) or skip start ("Skips:" section) located at line start.
+;      16  fold start ("Folds:" section) or skip start ("Skips:" section) located at line end.
+;      32  fold end ("Folds:" section) or skip end ("Skips:" section) located at line start.
+;      64  fold end ("Folds:" section) or skip end ("Skips:" section) located at line end.
 ;     128  don't catch fold end ("Folds:" section) or skip end ("Skips:" section).
 ;     256  additional to 128 flag - more priority is given to sibling level instead of parent level ("Folds:" section only).
 ;     512  comment fold - fold ignore any other folds and skips inside ("Folds:" section only).
@@ -185,7 +182,8 @@ Folds:
 ;Flags  Font    Color   Color   Fold    Fold   Deli     Parent  Rule    Rule
 ;       style   text    bkgrnd  start   end    miters   ID      ID      file
 ;===========================================================================
-
+1       0       0       0       "{"     "}"     ""      0       0
+1       0       0       0       "["     "]"     ""      0       0
 
 ;----------------------------------------------;
 ;                 AutoComplete                 ;
