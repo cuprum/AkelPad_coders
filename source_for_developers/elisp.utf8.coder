@@ -297,7 +297,7 @@ Folds:
 ;Flags  Font    Color   Color   Fold      Fold      Delimiters   Parent  Rule    Rule
 ;       style   text    bkgrnd  start     end                    ID      ID      file
 ;====================================================================================
-;393729‬=1+512+131072+262144
+;393729=1+512+131072+262144
 393729  0      ${STR}  0     `"`	`"`	`\`
 1       0      0       0     `(`	`)`	""
 
