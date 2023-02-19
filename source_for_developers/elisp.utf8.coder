@@ -83,7 +83,7 @@ Quotes:
 ;       style   text    bkgrnd  start   end     char    include exclude ID      ID  
 ;===================================================================================
 ;5=1+4
-5	0	${STR}	0	`"`	`"`	""	""	""	0	0
+5	0	${STR}	0	`"`	`"`	"\"	""	""	0	0
 5	0	${ATTR}	0	`:`	` `	""	""	""	0	0
 1	3	${COMM}	0	";"	""	""	""	""	0	0
 
@@ -113,34 +113,61 @@ Words:
 ;Flags  Font    Color   Color   Word        Parent
 ;       style   text    bkgrnd              ID
 ;=================================================
-0	0	${IF}	0	apply
-0	0	${IF}	0	apply-partially
 0	0	${IF}	0	catch
 0	0	${IF}	0	condition-case
 0	0	${IF}	0	declare-function
-0	0	${IF}	0	defalias
 0	0	${IF}	0	defconst
 0	0	${IF}	0	defcustom
 0	0	${IF}	0	defgroup
 0	0	${IF}	0	defmacro
-0	0	${IF}	0	defun
 0	0	${IF}	0	defvar
 0	0	${IF}	0	dolist
 0	0	${IF}	0	eq
 0	0	${IF}	0	equal
-0	0	${IF}	0	funcall
 0	0	${IF}	0	interactive
-0	0	${IF}	0	lambda
 0	0	${IF}	0	let
 0	0	${IF}	0	let*
-0	0	${IF}	0	list
 0	0	${IF}	0	provide
 0	0	${IF}	0	require
 0	0	${IF}	0	set
 0	0	${IF}	0	setq
 0	0	${IF}	0	throw
 0	0	${IF}	0	while
+; Functions
+0	0	${IF}	0	always
+0	0	${IF}	0	apply
+0	0	${IF}	0	apply-partially
+0	0	${IF}	0	cl-call-next-method
+0	0	${IF}	0	cl-defgeneric
+0	0	${IF}	0	cl-defmethod
+0	0	${IF}	0	cl-defun
+0	0	${IF}	0	cl-next-method-p
+0	0	${IF}	0	defalias
+0	0	${IF}	0	defun
+0	0	${IF}	0	fboundp
+0	0	${IF}	0	fmakunbound
+0	0	${IF}	0	fset
+0	0	${IF}	0	funcall
+0	0	${IF}	0	function
+0	0	${IF}	0	identity
+0	0	${IF}	0	ignore
+0	0	${IF}	0	lambda
+0	0	${IF}	0	mapc
+0	0	${IF}	0	mapcan
+0	0	${IF}	0	mapcar
+0	0	${IF}	0	mapconcat
+0	0	${IF}	0	symbol-function
 ; Lists
+0	0	${IF}	0	add-to-list
+0	0	${IF}	0	add-to-ordered-list
+0	0	${IF}	0	alist-get
+0	0	${IF}	0	append
+0	0	${IF}	0	assoc
+0	0	${IF}	0	assoc-default
+0	0	${IF}	0	assoc-delete-all
+0	0	${IF}	0	assq
+0	0	${IF}	0	assq-delete-all
+0	0	${IF}	0	atom
 0	0	${IF}	0	butlast
 0	0	${IF}	0	caar
 0	0	${IF}	0	cadr
@@ -150,12 +177,47 @@ Words:
 0	0	${IF}	0	cddr
 0	0	${IF}	0	cdr
 0	0	${IF}	0	cdr-safe
+0	0	${IF}	0	cons
+0	0	${IF}	0	consp
+0	0	${IF}	0	copy-alist
+0	0	${IF}	0	copy-tree
+0	0	${IF}	0	delete
+0	0	${IF}	0	delete-dups
+0	0	${IF}	0	delq
+0	0	${IF}	0	ensure-list
+0	0	${IF}	0	flatten-tree
 0	0	${IF}	0	last
+0	0	${IF}	0	lax-plist-get
+0	0	${IF}	0	lax-plist-put
+0	0	${IF}	0	let-alist
+0	0	${IF}	0	list
+0	0	${IF}	0	listp
+0	0	${IF}	0	make-list
+0	0	${IF}	0	member
+0	0	${IF}	0	member-ignore-case
+0	0	${IF}	0	memq
+0	0	${IF}	0	memql
 0	0	${IF}	0	nbutlast
+0	0	${IF}	0	nconc
+0	0	${IF}	0	nlistp
 0	0	${IF}	0	nth
 0	0	${IF}	0	nthcdr
+0	0	${IF}	0	null
+0	0	${IF}	0	number-sequence
+0	0	${IF}	0	plist-get
+0	0	${IF}	0	plist-member
+0	0	${IF}	0	plist-put
 0	0	${IF}	0	pop
+0	0	${IF}	0	proper-list-p
+0	0	${IF}	0	push
+0	0	${IF}	0	rassoc
+0	0	${IF}	0	rassq
+0	0	${IF}	0	rassq-delete-all
+0	0	${IF}	0	remove
+0	0	${IF}	0	remq
 0	0	${IF}	0	safe-length
+0	0	${IF}	0	setcar
+0	0	${IF}	0	setcdr
 ; Boolen
 0	0	${NUM}	0	t
 0	0	${NUM}	0	nil
@@ -224,8 +286,7 @@ Skips:
 ;Flags  Skip    Skip    Escape
 ;       start   end     char
 ;=============================
-1	`"`	`"`	"\"
-1	`'`	`'`	"\"
+1	`"`	`"`	""
 1	";"	""	""
 
 
@@ -234,8 +295,9 @@ Folds:
 ;Flags  Font    Color   Color   Fold      Fold      Delimiters   Parent  Rule    Rule
 ;       style   text    bkgrnd  start     end                    ID      ID      file
 ;====================================================================================
-;1+512+262144
-262657   0   ${STR}   0   `"`   `"`   ""
+;393729‬=1+512+131072+262144
+393729  0      ${STR}  0     `"`	`"`	`\`
+1       0      0       0     `(`	`)`	""
 
 ;----------------------------------------------;
 ;                 AutoComplete                 ;
