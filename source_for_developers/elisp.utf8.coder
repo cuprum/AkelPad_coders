@@ -216,6 +216,21 @@ Words:
 0	0	${IF}	0	safe-length
 0	0	${IF}	0	setcar
 0	0	${IF}	0	setcdr
+; Symbols
+0	0	${IF}	0	function-get
+0	0	${IF}	0	function-put
+0	0	${IF}	0	gensym
+0	0	${IF}	0	get
+0	0	${IF}	0	intern
+0	0	${IF}	0	intern-soft
+0	0	${IF}	0	make-symbol
+0	0	${IF}	0	mapatoms
+0	0	${IF}	0	put
+0	0	${IF}	0	setplist
+0	0	${IF}	0	symbol-name
+0	0	${IF}	0	symbol-plist
+0	0	${IF}	0	symbolp
+0	0	${IF}	0	unintern
 ; Loops
 0	0	${IF}	0	dolist
 0	0	${IF}	0	dotimes
