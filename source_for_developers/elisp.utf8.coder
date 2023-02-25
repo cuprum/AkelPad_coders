@@ -328,6 +328,22 @@ Words:
 1	0	${IF}	0	substring-no-properties
 1	0	${IF}	0	upcase
 1	0	${IF}	0	upcase-initials
+; Vectors
+1	0	${IF}	0	bool-vector
+1	0	${IF}	0	bool-vector-count-consecutive
+1	0	${IF}	0	bool-vector-count-population
+1	0	${IF}	0	bool-vector-exclusive-or
+1	0	${IF}	0	bool-vector-intersection
+1	0	${IF}	0	bool-vector-not
+1	0	${IF}	0	bool-vector-p
+1	0	${IF}	0	bool-vector-set-difference
+1	0	${IF}	0	bool-vector-subsetp
+1	0	${IF}	0	bool-vector-union
+1	0	${IF}	0	make-bool-vector
+1	0	${IF}	0	make-vector
+1	0	${IF}	0	vconcat
+1	0	${IF}	0	vector
+1	0	${IF}	0	vectorp
 ; Loops
 1	0	${IF}	0	dolist
 1	0	${IF}	0	dotimes
