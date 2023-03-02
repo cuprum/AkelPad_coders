@@ -442,7 +442,18 @@ Words:
 1	0	${IF}	0	arrayp
 1	0	${IF}	0	aset
 1	0	${IF}	0	fillarray
-; Vectors
+; Char-Tables
+1	0	${IF}	0	char-table-extra-slot
+1	0	${IF}	0	char-table-p
+1	0	${IF}	0	char-table-parent
+1	0	${IF}	0	char-table-range
+1	0	${IF}	0	char-table-subtype
+1	0	${IF}	0	make-char-table
+1	0	${IF}	0	map-char-table
+1	0	${IF}	0	set-char-table-extra-slot
+1	0	${IF}	0	set-char-table-parent
+1	0	${IF}	0	set-char-table-range
+; Vectors, Bool-vectors
 1	0	${IF}	0	bool-vector
 1	0	${IF}	0	bool-vector-count-consecutive
 1	0	${IF}	0	bool-vector-count-population
