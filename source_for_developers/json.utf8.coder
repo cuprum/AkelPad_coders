@@ -85,7 +85,7 @@ Quotes:
 ;       style   text    bkgrnd  start   end     char    include exclude ID      ID
 ;===================================================================================
 ;5=1+4
-5	0	${STR}	0	`"`	`"`	""	""	""	0	0
+5	0	${STR}	0	`"`	`"`	"\"	""	""	0	0
 
 
 QuotesRE:
